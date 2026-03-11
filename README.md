@@ -1,20 +1,69 @@
 # FraudDetection PS-6
-The goal is to detect Fraud in a large dataset that is larger than the context window. This means we need to break the data into chunks and process these chunks in parallel. 
-The schema in sampleData.json gives some examples of transactions with some most likely fraudulent. We will start with a demo using only 100 transactions but these should be chunked into 5 batches of 20 and processed in parallel.
-The user interface should allow monitoring of Agent and Tool calls so you can check what is happening. You should accumulate fraudulent transactions into a single file. You can view this accumulator as keeping "state" of the app.  
-Your UI should display the fraudulent transactions in near real time. 
 
-You should create around 100 transactions with a few that are fraudulent in each batch. 
-## High-Level Architecture
+This project provides a runnable fraud-detection demo with the exact architecture requested:
 
-You probably want the following:
+- Input: list of 100 transactions in `data/transactions100.json`
+- Chunking: split into 5 batches of 20
+- Parallel Agent/LLM Calls: process all 5 batches concurrently
+- Aggregation: append suspicious transactions into `data/suspiciousTransactions.json` via a `suspiciousTransactions` tool
+- UI Monitoring: live feed of agent calls, tool calls, and suspicious transaction state
 
-Input: Stream/list of transactions
+## Data Files
 
-Chunking: Split into batches of 20
+- `data/sampleData.json`: schema examples
+- `data/transactions100.json`: generated dataset with 100 transactions
+- `data/suspiciousTransactions.json`: accumulator/state file (starts as `[]`)
 
-Parallel Agent/LLM Calls: Send each batch to Openai model concurrently
+## How It Works
 
-Aggregation: Write suspicious transactions into the file and to the UI via a suspiciousTransactions Tool
+1. `POST /api/run` starts a detection run.
+2. The server loads 100 transactions and validates the count.
+3. Transactions are chunked into batches of 20.
+4. All batches are sent in parallel for analysis:
+	- Uses OpenAI if `OPENAI_API_KEY` is set.
+	- Falls back to deterministic rule-based analysis if key/model call fails.
+5. Each batch writes suspicious results through the `suspiciousTransactions` tool.
+6. Tool writes update `data/suspiciousTransactions.json` and emit websocket events.
+7. UI updates in near real time with:
+	- Agent call stages
+	- Tool call stages
+	- Current suspicious transaction table
+
+## Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Optional: configure OpenAI credentials:
+
+```bash
+cp .env.example .env
+```
+
+Set `OPENAI_API_KEY` in `.env` to use model-based analysis.
+
+3. Start server:
+
+```bash
+npm start
+```
+
+4. Open the app:
+
+- `http://localhost:3000`
+
+## UI Controls
+
+- `Run Detection`: process the 100 transactions (5x20 in parallel)
+- `Reset State`: clears `data/suspiciousTransactions.json` to `[]`
+
+## API Endpoints
+
+- `GET /api/state`: fetch current suspicious state and latest run summary
+- `POST /api/run`: launch detection
+- `POST /api/reset`: clear accumulator state
 
 

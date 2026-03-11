@@ -1,0 +1,15 @@
+{
+  "name": "fraud-detection-ps6",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^4.80.1",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fraud Detection Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="hero card">
+        <h1>Fraud Detection Console</h1>
+        <p>5 parallel batches x 20 transactions, with near real-time suspicious aggregation.</p>
+        <div class="actions">
+          <button id="runBtn">Run Detection</button>
+          <button id="resetBtn" class="secondary">Reset State</button>
+        </div>
+        <div id="summary" class="summary">No run yet.</div>
+      </section>
+
+      <section class="card">
+        <h2>Agent + Tool Activity</h2>
+        <div id="events" class="events"></div>
+      </section>
+
+      <section class="card">
+        <h2>Suspicious Transactions State</h2>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Account</th>
+                <th>Amount</th>
+                <th>Risk</th>
+                <th>Reason</th>
+                <th>Batch</th>
+              </tr>
+            </thead>
+            <tbody id="suspiciousBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
